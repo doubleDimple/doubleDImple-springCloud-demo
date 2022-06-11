@@ -1,6 +1,18 @@
 server:
   port: 8761
 
+spring:
+  application:
+    name: eureka-server
+
+  #权限认证
+  security:
+    basic:
+      enabled: true
+    user:
+      name: doubleDimple
+      password: 123456
+
 eureka:
   client:
     register-with-eureka: false
