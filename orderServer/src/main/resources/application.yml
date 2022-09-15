@@ -3,11 +3,32 @@ server:
 
 spring:
   application:
-    name: user-server
+    name: order-server
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://doubleDimple:123456@localhost:8761/eureka/
   instance:
     prefer-ip-address: true
+
+feign:
+  httpclient: #可以忽略，默认开启
+    enabled: false
+  okhttp:
+    enabled: true
+    #配置GZIP压缩数据
+  compression:
+    request:
+      enabled: true
+      mime-types: text/xml,application/xml,application/json
+      min-request-size: 2048
+    response:
+      enabled: true
+
+#在yml配置文件中执行 Client 的日志级别才能正常输出日志，格式是"logging.level.feign接口包路径 =debug"
+logging:
+  level:
+    com.doubleDimple.orderServer.feign: debug
+
+
