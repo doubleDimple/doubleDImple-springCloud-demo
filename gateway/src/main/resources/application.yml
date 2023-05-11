@@ -14,16 +14,20 @@ spring:
         locator:
           enabled: true
       routes:
+        #??????
         - id: order-server
           uri: lb://ORDER-SERVER
           predicates:
             - Path=/api/order/**
           filters:
             - RewritePath=/api/order/(?<remaining>.*), /order-server/api/order/$\{remaining}
+        #??????
         - id: user-server
-          uri: lb://user-server
+          uri: lb://USER-SERVER
           predicates:
             - Path=/api/user/**
+          filters:
+            - RewritePath=/api/user/(?<remaining>.*), /user-server/api/user/$\{remaining}
 
 eureka:
   client:
