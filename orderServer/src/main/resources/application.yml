@@ -35,4 +35,12 @@ logging:
   level:
     com.doubleDimple.orderServer.feign: debug
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+
+
 
