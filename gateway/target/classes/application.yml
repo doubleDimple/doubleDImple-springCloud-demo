@@ -1,0 +1,31 @@
+server:
+  port: 8056
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: gateway-server
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: order-server
+          uri: lb://order-server
+          predicates:
+            - Path=/order-server/api/order/**
+        - id: user-server
+          uri: lb://user-server
+          predicates:
+            - Path=/api/user/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://doubleDimple:123456@localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+  server:
+    renewal-percent-threshold: 0.49
