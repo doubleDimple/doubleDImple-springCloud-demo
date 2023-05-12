@@ -24,12 +24,6 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-gateway</artifactId>
 		</dependency>
-		<!-- Spring Cloud Starter RateLimiter -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-ratelimiter</artifactId>
-			<version>1.1.0.RELEASE</version>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-circuitbreaker-reactor-resilience4j</artifactId>
