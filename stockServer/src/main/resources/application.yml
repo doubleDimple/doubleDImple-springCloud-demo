@@ -1,5 +1,7 @@
 server:
   port: 8053
+  servlet:
+    context-path: stock-server
 
 spring:
   application:

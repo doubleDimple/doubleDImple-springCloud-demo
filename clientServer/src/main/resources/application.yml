@@ -1,5 +1,7 @@
 server:
   port: 8051
+  servlet:
+    context-path: client-server
 
 spring:
   application:

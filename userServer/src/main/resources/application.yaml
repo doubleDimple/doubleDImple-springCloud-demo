@@ -1,5 +1,7 @@
 server:
   port: 8054
+  servlet:
+    context-path: /user-server
 
 spring:
   application:
