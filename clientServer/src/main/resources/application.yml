@@ -1,7 +1,7 @@
 server:
   port: 8051
   servlet:
-    context-path: client-server
+    context-path: /client-server
 
 spring:
   application:
@@ -14,7 +14,7 @@ eureka:
   instance:
     prefer-ip-address: true
   server:
-    renewal-percent-threshold: 0.5
+    renewal-percent-threshold: 0.85
 
 feign:
   httpclient: #可以忽略，默认开启
