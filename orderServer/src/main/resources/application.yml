@@ -7,7 +7,7 @@ spring:
   application:
     name: order-server
   profiles:
-    active: dev
+    active: test
 
 eureka:
   client:
@@ -16,7 +16,7 @@ eureka:
   instance:
     prefer-ip-address: true
   server:
-    renewal-percent-threshold: 0.5
+    renewal-percent-threshold: 0.85
 
 feign:
   httpclient: #可以忽略，默认开启
@@ -36,12 +36,20 @@ feign:
 logging:
   level:
     com.doubleDimple.orderServer.feign: debug
+  path: logs
+  file: order-server
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: '*'
+      base-path: /order-server/actuator
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+
 
 
 
