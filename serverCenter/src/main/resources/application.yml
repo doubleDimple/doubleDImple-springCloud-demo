@@ -12,6 +12,9 @@ spring:
     user:
       name: doubleDimple
       password: 123456
+  boot:
+    admin:
+      context-path: /admin
 
 eureka:
   client:
@@ -21,3 +24,12 @@ eureka:
       defaultZone: http://doubleDimple:123456@localhost:8761/eureka/
   server:
     renewal-percent-threshold: 0.85
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  #<2>
+  endpoint:
+    health:
+      show-details: ALWAYS

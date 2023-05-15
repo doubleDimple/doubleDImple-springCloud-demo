@@ -43,6 +43,12 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-server</artifactId>
+            <version>2.3.1</version>
+        </dependency>
     </dependencies>
     <!-- 处理spring冲突-->
     <repositories>
