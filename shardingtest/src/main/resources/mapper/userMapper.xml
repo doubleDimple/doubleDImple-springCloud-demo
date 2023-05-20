@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.doubledimple.shardingtest.mapper.UserMapper">
-    <resultMap id="BaseResultMap" type="com.doubledimple.shardingtest.entity.User">
+    <resultMap id="BaseResultMap" type="com.doubledimple.shardingtest.entity.pojo.User">
         <id column="user_id" property="userId" jdbcType="BIGINT"/>
         <result column="user_name" property="userName" jdbcType="VARCHAR"/>
         <result column="age" property="age" jdbcType="INTEGER"/>
@@ -12,7 +12,7 @@
     </resultMap>
 
     <!--用户添加-->
-    <insert id="addUser" parameterType="com.doubledimple.shardingtest.entity.User">
+    <insert id="addUser" parameterType="com.doubledimple.shardingtest.entity.pojo.User">
         insert into `user` (user_name, age, birthday, address, sex)
         values(#{userName}, #{age}, #{birthday}, #{address}, #{sex})
     </insert>
@@ -20,6 +20,236 @@
     <!--用户查询-->
     <select id="queryAllUser" resultMap="BaseResultMap" >
         select * from `user` where 1=1
+    </select>
+
+    <!--实体映射-->
+    <resultMap id="base_result_map" type="com.doubledimple.shardingtest.entity.pojo.User">
+        <!---->
+        <id column="user_id" property="userId"  />
+        <!--姓名-->
+        <result column="user_name" property="userName"  />
+        <!--年龄-->
+        <result column="age" property="age"  />
+        <!--生日-->
+        <result column="birthday" property="birthday"  />
+        <!--地址-->
+        <result column="address" property="address"  />
+        <!--身份证号码-->
+        <result column="sex" property="sex"  />
+    </resultMap>
+
+
+    <!-- 通用查询结果列-->
+    <sql id="base_column_list">
+        `user_id`,`user_name`,`age`,`birthday`,`address`,`sex`
+    </sql>
+
+    <sql id="base_condition_filed">
+        <if test="userId != null">
+            and  `user_id` = #{userId}
+        </if>
+        <if test="userName != null and userName !=''">
+            and  `user_name` = #{userName}
+        </if>
+        <if test="age != null">
+            and  `age` = #{age}
+        </if>
+        <if test="birthday != null and birthday !=''">
+            and  `birthday` = #{birthday}
+        </if>
+        <if test="address != null and address !=''">
+            and  `address` = #{address}
+        </if>
+        <if test="sex != null">
+            and  `sex` = #{sex}
+        </if>
+    </sql>
+    <!-- 通用条件列-->
+    <sql id="base_condition">
+        <where> <include refid="base_condition_filed" />	 </where>
+    </sql>
+
+    <!-- 通用查询条件列-->
+    <sql id="query_condition">
+        <where>
+            <include refid="base_condition_filed" />
+            <if test="userNameFuzzy != null  and userNameFuzzy != ''">
+                and  `user_name` like concat('%', #{userNameFuzzy}, '%')
+            </if>
+            <if test="birthdayFuzzy != null  and birthdayFuzzy != ''">
+                and  `birthday` like concat('%', #{birthdayFuzzy}, '%')
+            </if>
+            <if test="addressFuzzy != null  and addressFuzzy != ''">
+                and  `address` like concat('%', #{addressFuzzy}, '%')
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询集合-->
+    <select id="selectList" resultMap="base_result_map" >
+        SELECT <include refid="base_column_list" /> FROM `user` <include refid="query_condition" />
+        <if test="orderBy!=null">
+            order by ${orderBy}
+        </if>
+        <if test="page!=null">
+            limit #{page.start},#{page.end}
+        </if>
+    </select>
+
+    <!-- 查询数量-->
+    <select id="selectCount" resultType="java.lang.Integer" >
+        SELECT count(1) FROM `user` <include refid="query_condition" />
+    </select>
+
+    <!-- 插入 （匹配有值的字段）-->
+    <insert id="insert" parameterType="com.doubledimple.shardingtest.entity.pojo.User">
+        <selectKey keyProperty="userId" resultType="Long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO `user`
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="userName != null">
+                `user_name`,
+            </if>
+            <if test="age != null">
+                `age`,
+            </if>
+            <if test="birthday != null">
+                `birthday`,
+            </if>
+            <if test="address != null">
+                `address`,
+            </if>
+            <if test="sex != null">
+                `sex`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="userName!=null">
+                #{userName},
+            </if>
+            <if test="age!=null">
+                #{age},
+            </if>
+            <if test="birthday!=null">
+                #{birthday},
+            </if>
+            <if test="address!=null">
+                #{address},
+            </if>
+            <if test="sex!=null">
+                #{sex},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 插入 （根据表名称插入）-->
+    <insert id="insertWidthTableName" parameterType="com.doubledimple.shardingtest.entity.pojo.User">
+        <selectKey keyProperty="bean.userId" resultType="Long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO `${tableName}`(`user_name`,`age`,`birthday`,`address`,`sex`)values(
+        #{bean.userName},#{bean.age},#{bean.birthday},#{bean.address},#{bean.sex})
+        ON DUPLICATE KEY UPDATE
+        `user_name` = values(`user_name`),`age` = values(`age`),`birthday` = values(`birthday`),`address` = values(`address`),`sex` = values(`sex`)
+    </insert>
+
+    <!-- 添加 （批量插入或修改）-->
+    <insert id="insertBatch" parameterType="com.doubledimple.shardingtest.entity.pojo.User">
+        INSERT INTO `user`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            `id`,
+            <if test="list[0].user_name!= null">
+                `user_name`,
+            </if>
+            <if test="list[0].age!= null">
+                `age`,
+            </if>
+            <if test="list[0].birthday!= null">
+                `birthday`,
+            </if>
+            <if test="list[0].address!= null">
+                `address`,
+            </if>
+            <if test="list[0].sex!= null">
+                `sex`,
+            </if>
+        </trim>
+        values
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.id},
+                <if test="list[0].user_name!= null">
+                    #{item.userName},
+                </if>
+                <if test="list[0].age!= null">
+                    #{item.age},
+                </if>
+                <if test="list[0].birthday!= null">
+                    #{item.birthday},
+                </if>
+                <if test="list[0].address!= null">
+                    #{item.address},
+                </if>
+                <if test="list[0].sex!= null">
+                    #{item.sex},
+                </if>
+
+            </trim>
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+
+        <trim suffixOverrides="," >
+            <if test="list[0].user_name!= null">
+                `user_name`= values(`user_name`),
+            </if>
+            <if test="list[0].age!= null">
+                `age`= values(`age`),
+            </if>
+            <if test="list[0].birthday!= null">
+                `birthday`= values(`birthday`),
+            </if>
+            <if test="list[0].address!= null">
+                `address`= values(`address`),
+            </if>
+            <if test="list[0].sex!= null">
+                `sex`= values(`sex`),
+            </if>
+
+        </trim>
+    </insert>
+
+    <!-- 根据PrimaryKey修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.doubledimple.shardingtest.entity.pojo.User">
+        UPDATE `user`
+        <set>
+            <if test="bean.userName != null">
+                `user_name` = #{bean.userName},
+            </if>
+            <if test="bean.age != null">
+                `age` = #{bean.age},
+            </if>
+            <if test="bean.birthday != null">
+                `birthday` = #{bean.birthday},
+            </if>
+            <if test="bean.address != null">
+                `address` = #{bean.address},
+            </if>
+            <if test="bean.sex != null">
+                `sex` = #{bean.sex},
+            </if>
+        </set>
+        where `user_id`=#{userId}
+    </update>
+
+    <!-- 根据PrimaryKey删除-->
+    <delete id="deleteByPrimaryKey">
+        delete from `user` where `user_id`=#{userId}
+    </delete>
+
+    <!-- 根据PrimaryKey获取对象-->
+    <select id="selectByPrimaryKey" resultMap="base_result_map" >
+        select <include refid="base_column_list" /> from `user` where `user_id`=#{userId}
     </select>
 
 

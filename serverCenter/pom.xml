@@ -9,9 +9,9 @@
         <relativePath/>
     </parent>
     <groupId>com.doubleDimple</groupId>
-    <artifactId>eurekaserver</artifactId>
+    <artifactId>serverCenter</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>eurekaserver</name>
+    <name>serverCenter</name>
     <description>Demo project for Spring Boot</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

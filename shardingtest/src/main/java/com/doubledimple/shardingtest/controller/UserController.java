@@ -1,12 +1,15 @@
 package com.doubledimple.shardingtest.controller;
 
 import com.doubledimple.shardingtest.common.IDUtil;
-import com.doubledimple.shardingtest.entity.User;
+import com.doubledimple.shardingtest.entity.page.PaginationResult;
+import com.doubledimple.shardingtest.entity.pojo.User;
+import com.doubledimple.shardingtest.entity.query.UserQuery;
 import com.doubledimple.shardingtest.service.UserService;
 import groovy.util.logging.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,9 +38,10 @@ public class UserController {
     }
 
     @RequestMapping("/testQueryUser")
-    public ResponseEntity<List<User>> testQueryUser(){
-        List<User> userList = userService.queryAllUser();
-        ResponseEntity<List<User>> responseEntity = new ResponseEntity<>(userList,HttpStatus.OK);
+    public ResponseEntity<PaginationResult<User>> testQueryUser(@RequestBody UserQuery userQuery){
+        PaginationResult<User> result = this.userService.findListByPage(userQuery);
+        userQuery.setOrderBy("user_id");
+        ResponseEntity<PaginationResult<User>> responseEntity = new ResponseEntity<>(result,HttpStatus.OK);
         return responseEntity;
     }
 }

@@ -1,4 +1,4 @@
-package com.doubledimple.shardingtest.entity;
+package com.doubledimple.shardingtest.entity.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
