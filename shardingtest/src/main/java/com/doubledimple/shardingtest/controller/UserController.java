@@ -35,8 +35,9 @@ public class UserController {
     }
 
     @RequestMapping("/testQueryUser")
-    public ResponseEntity testQueryUser(){
+    public ResponseEntity<List<User>> testQueryUser(){
         List<User> userList = userService.queryAllUser();
-        return ResponseEntity.ok(userList);
+        ResponseEntity<List<User>> responseEntity = new ResponseEntity<>(userList,HttpStatus.OK);
+        return responseEntity;
     }
 }
