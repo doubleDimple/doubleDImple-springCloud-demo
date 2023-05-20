@@ -3,7 +3,6 @@ server:
 
 spring:
   main:
-    #????bean???
     allow-bean-definition-overriding: true
   shardingsphere:
     sharding:
