@@ -6,6 +6,8 @@ server:
 spring:
   application:
     name: order-server
+  profiles:
+    active: dev
   boot:
     admin:
       client:
