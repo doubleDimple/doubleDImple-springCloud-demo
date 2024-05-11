@@ -7,7 +7,6 @@ import com.doubledimple.shardingtest.entity.pojo.User;
 import com.doubledimple.shardingtest.entity.query.UserQuery;
 import com.doubledimple.shardingtest.mapper.UserMapper;
 import com.doubledimple.shardingtest.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
